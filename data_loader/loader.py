@@ -22,3 +22,8 @@ def load_day2(example_data=None):
     for line in lines:
         data.append([int(item) for item in line])
     return data
+
+
+def load_day3():
+    with open('data/day3.data') as f:
+        return f.readlines()
