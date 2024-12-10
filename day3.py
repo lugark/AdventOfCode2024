@@ -13,11 +13,19 @@ def mul_strip(stream_text: str, regex_split: regex_part1) -> List:
 def mul_sum_list(values_list: List) -> int:
     return sum(a*b for a,b in values_list)
 
-def mul_values_with_check(values_list: List) -> int:
-    command, a, b = values_list
-    if 'don\'t' == command:
-        return 0
-    return int(a)*int(b)
+def mul_sum_values_with_check(values_list: List) -> int:
+    enabled = True
+    sum_values = 0
+    for item in values_list:
+        if item == 'do()':
+            enabled = True
+        elif item == 'don\'t()':
+            enabled = False
+        elif 'mul' in item and enabled:
+            matches = re.findall(r"\d+", item)
+            a, b = map(int, matches)
+            sum_values += a*b
+    return sum_values
 
 
 data = loader.load_day3()
@@ -30,10 +38,9 @@ sum_multiplies = mul_sum_list(mul_extracted)
 print(sum_multiplies)
 
 ################# Part 2 - mul - example 48
-mul_extracted = mul_strip(example_data2, regex_part2)
-sum_multiplies = 0
-for matches in mul_extracted:
-    sum_multiplies += mul_values_with_check([item for item in matches if item != ''])
+mul_extracted = mul_strip(example_data2, r"(mul\(\d+,\d+\)|do\(\)|don't\(\))")
+
+sum_multiplies = mul_sum_values_with_check(mul_extracted)
 
 print(sum_multiplies)
 
